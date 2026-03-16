@@ -39,7 +39,7 @@ This project is a role-based car rental web application built with:
 - `config/database.php`: PDO connection setup
 - `includes/auth.php`: session helpers, guards, flash messages
 - `includes/layout.php`: shared header/footer/navbar
-- UI uses Bootstrap classes only (no custom theme or animations loaded)
+- UI uses Bootstrap classes only 
 - `database/car_rental_agency.sql`: full schema + sample seed data
 
 ## Setup Instructions

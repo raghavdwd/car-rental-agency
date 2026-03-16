@@ -1,18 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
-$host = '127.0.0.1';
-$dbname = 'car_rental_agency';
-$username = 'root';
-$password = 'raghavdwd';
-
 
 /*
-    * For security reasons, it's recommended to use environment variables or a separate configuration file
-    * to store sensitive information like database credentials in a real application.
-    * The above credentials are hardcoded here for simplicity and demonstration purposes only.
+    * This file contains the database connection setup for the Car Rental Agency application.
+    * It uses environment variables to securely manage database credentials and establishes a PDO connection.
+    * The connection is configured to throw exceptions on errors and to use prepared statements for security.
 */
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+$host = $_ENV['DB_HOST'];
+$dbname = $_ENV['DB_NAME'];
+$username = $_ENV['DB_USER'];
+$password = $_ENV['DB_PASS'];
 
 try {
     $pdo = new PDO(
@@ -20,11 +25,15 @@ try {
         $username,
         $password,
         [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Enable exceptions for errors
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Fetch results as associative arrays
-            PDO::ATTR_EMULATE_PREPARES => false, // Use native prepared statements for better security
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
         ]
     );
 } catch (PDOException $exception) {
-    die('Database connection failed: ' . $exception->getMessage());
+    if ($_ENV['APP_ENV'] === 'development') {
+        die($exception->getMessage());
+    } else {
+        die('Database connection failed.');
+    }
 }
